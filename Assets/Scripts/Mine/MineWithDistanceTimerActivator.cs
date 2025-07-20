@@ -7,9 +7,6 @@ public class MineWithDistanceTimerActivator : Mine
 
     [SerializeField] private int _damage;
 
-    private IMovable _movable;
-    private IDamageble _damageble;
-
     private void Update()
     {
         if (_activator == null)
@@ -20,18 +17,18 @@ public class MineWithDistanceTimerActivator : Mine
 
     public override void Activate()
     {
-        if (Vector3.Distance(_movable.Transform.position, transform.position) <= _radius)
-            _damageble.TakeDamage(_damage);
+        Collider[] collidersInSphere = Physics.OverlapSphere(transform.position, _radius);
+
+        foreach (Collider collider in collidersInSphere)
+            if (collider.GetComponent<IDamageble>() != null)
+                collider.GetComponent<IDamageble>().TakeDamage(_damage);
 
         gameObject.SetActive(false);
     }
 
-    public override void Initialize(IMovable movable, IDamageble damageble)
+    public override void Initialize()
     {
-        _movable = movable;
-        _damageble = damageble;
-
-        _activator = new DistanceActivatorToolWithTimer(this, _movable, _radius, _timeDetonate);
+        _activator = new OverlapsSphereActivator(this, _timeDetonate, _radius);
     }
 
     private void OnDrawGizmos()
