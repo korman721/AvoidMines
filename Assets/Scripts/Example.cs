@@ -19,7 +19,7 @@ public class Example : MonoBehaviour
     {
         if (_mines != null)
             foreach (Mine mine in _mines)
-                mine.Initialize();
+                mine.Initialize(_agent, _agent);
 
         _shooter = new RayShooter(_layerMask, new MoveToPointEffect(_agent, new PointSetter(_pointPrefab, _agent)));
 

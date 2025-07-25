@@ -8,5 +8,5 @@ public abstract class Mine : MonoBehaviour, IActivateble
 
     public abstract void Activate();
 
-    public abstract void Initialize();
+    public abstract void Initialize(IMovable movable, IDamageble damageble);
 }
