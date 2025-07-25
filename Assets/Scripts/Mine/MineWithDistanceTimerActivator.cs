@@ -23,17 +23,15 @@ public class MineWithDistanceTimerActivator : Mine
             if (collider.GetComponent<IDamageble>() != null)
                 collider.GetComponent<IDamageble>().TakeDamage(_damage);
 
+        _explosionSound.Play();
+
         gameObject.SetActive(false);
     }
 
-    public override void Initialize()
-    {
-        _activator = new OverlapsSphereActivator(this, _timeDetonate, _radius);
-    }
+    public override void Initialize(AudioSource exlosion)
+    {   
+        _activator = new OverlapsSphereActivator(this, _timeDetonate, _radius, this);
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(transform.position, _radius);
+        _explosionSound = exlosion;
     }
 }
