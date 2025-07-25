@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Example : MonoBehaviour
 {
-    [SerializeField] private AudioSource _explosion;
-
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private AgentCharacter _agent;
     [SerializeField] private Camera _camera;
@@ -21,12 +19,11 @@ public class Example : MonoBehaviour
     {
         if (_mines != null)
             foreach (Mine mine in _mines)
-                mine.Initialize(_explosion);
+                mine.Initialize();
 
         _shooter = new RayShooter(_layerMask, new MoveToPointEffect(_agent, new PointSetter(_pointPrefab, _agent)));
 
         _agentController = new CompositeController(
-            new AgentJumpController(_agent),
             new AlongMovableVelocityRotatableController(_agent, _agent),
             new MoveToPointAgentController(_shooter, _camera, _virtualCamera));
 

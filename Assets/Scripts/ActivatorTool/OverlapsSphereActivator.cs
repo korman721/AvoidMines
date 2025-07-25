@@ -1,21 +1,16 @@
-using System.Collections;
 using UnityEngine;
 
 public class OverlapsSphereActivator : ActivatorTool
 {
+    private float _time;
+    private float _timeToActivate;
+
     private float _activateRadius;
 
-    private float _timeToDetonate;
-
-    private Coroutine _process;
-
-    private MonoBehaviour _coroutineRunner;
-
-    public OverlapsSphereActivator(IActivateble activateble, float timeToDetonate, float activateRadius, MonoBehaviour coroutineRunner) : base(activateble)
+    public OverlapsSphereActivator(IActivateble activateble, float timeToActivate, float activateRadius) : base(activateble)
     {
+        _timeToActivate = timeToActivate;
         _activateRadius = activateRadius;
-        _timeToDetonate = timeToDetonate;
-        _coroutineRunner = coroutineRunner;
     }
 
     public override void ActivateCondition()
@@ -31,17 +26,13 @@ public class OverlapsSphereActivator : ActivatorTool
 
         if (_isActivated)
         {
-            if (_process == null)
-                _process = _coroutineRunner.StartCoroutine(ActivateProcess());
+            _time += Time.deltaTime;
+
+            if (_time > _timeToActivate)
+            {
+                _activateble.Activate();
+                _time = 0;
+            }
         }
-    }
-
-    private IEnumerator ActivateProcess()
-    {
-        yield return new WaitForSeconds(_timeToDetonate);
-
-        _activateble.Activate();
-
-        _process = null;
     }
 }

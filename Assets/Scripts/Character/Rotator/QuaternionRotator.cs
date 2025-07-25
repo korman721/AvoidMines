@@ -4,12 +4,23 @@ public class QuaternionRotator : Rotator
 {
     private Transform _transform;
 
-    public QuaternionRotator(float rotationSpeed, Transform transform) : base(rotationSpeed)
+    private float _rotationSpeed;
+
+    public QuaternionRotator(Transform transform, float rotationSpeed)
     {
-        _transform= transform;
+        _transform = transform;
+        _rotationSpeed = rotationSpeed;
     }
 
-    public override Quaternion Rotation => _transform.rotation;
+    protected override void RotateTo(float timeDeltaTime)
+    {
+        if (InputDirection.magnitude < 0.05f)
+            return;
 
-    protected override void ApplyRotation(Quaternion rotation) => _transform.rotation = rotation;
+        Quaternion lookRotation = Quaternion.LookRotation(InputDirection.normalized);
+
+        float step = _rotationSpeed * timeDeltaTime;
+
+        _transform.rotation = Quaternion.RotateTowards(_transform.rotation, lookRotation, step);
+    }
 }

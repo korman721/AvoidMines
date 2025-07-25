@@ -2,12 +2,7 @@ using UnityEngine;
 
 public abstract class Rotator
 {
-    protected float _rotationSpeed;
-
-    protected Rotator(float rotationSpeed)
-    {
-        _rotationSpeed = rotationSpeed;
-    }
+    protected Vector3 InputDirection { get; private set; }
 
     public void Update(float timeDeltaTime)
     {
@@ -16,21 +11,7 @@ public abstract class Rotator
 
     public void SetInputDirection(Vector3 inputDirection) => InputDirection = inputDirection;
 
-    protected Vector3 InputDirection { get; private set; }
+    public Quaternion GetCurrentRotation(Transform transform) => transform.rotation;
 
-    public abstract Quaternion Rotation { get; }
-
-    private void RotateTo(float timeDeltaTime)
-    {
-        if (InputDirection.magnitude < 0.05f)
-            return;
-
-        Quaternion lookRotation = Quaternion.LookRotation(InputDirection.normalized);
-
-        float step = _rotationSpeed * timeDeltaTime;
-
-        ApplyRotation(Quaternion.RotateTowards(Rotation, lookRotation, step));
-    }
-
-    protected abstract void ApplyRotation(Quaternion rotation);
+    protected abstract void RotateTo(float timeDeltaTime);
 }
