@@ -19,7 +19,11 @@ public class Example : MonoBehaviour
     {
         if (_mines != null)
             foreach (Mine mine in _mines)
+<<<<<<< HEAD
                 mine.Initialize(_agent, _agent);
+=======
+                mine.Initialize();
+>>>>>>> parent of a62c33f (IntermediateCommit)
 
         _shooter = new RayShooter(_layerMask, new MoveToPointEffect(_agent, new PointSetter(_pointPrefab, _agent)));
 
