@@ -29,11 +29,15 @@ public class MineWithDistanceTimerActivator : Mine
         foreach (Collider collider in collidersInSphere)
             if (collider.GetComponent<IDamageble>() != null)
                 collider.GetComponent<IDamageble>().TakeDamage(_damage);
+<<<<<<< HEAD
+>>>>>>> parent of a62c33f (IntermediateCommit)
+=======
 >>>>>>> parent of a62c33f (IntermediateCommit)
 
         gameObject.SetActive(false);
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     public override void Initialize(IMovable movable, IDamageble damageble)
     {
@@ -43,6 +47,13 @@ public class MineWithDistanceTimerActivator : Mine
         _activator = new DistanceActivatorToolWithTimer(this, _movable, _radius, _timeDetonate);
     }
 
+=======
+    public override void Initialize()
+    {
+        _activator = new OverlapsSphereActivator(this, _timeDetonate, _radius);
+    }
+
+>>>>>>> parent of a62c33f (IntermediateCommit)
 =======
     public override void Initialize()
     {
