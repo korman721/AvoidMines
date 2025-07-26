@@ -6,7 +6,7 @@ public class AgentView : MonoBehaviour
 {
     private readonly int IsRunningKey = Animator.StringToHash("IsRunning");
     private readonly int TakeDamageKey = Animator.StringToHash("TakeDamage");
-    private readonly int DieKey = Animator.StringToHash("Die");
+    private readonly int DieKey = Animator.StringToHash("IsDead");
     private readonly int JumpKey = Animator.StringToHash("IsJumping");
 
     private const string InjureLayerKey = "InjureLayer";
@@ -14,7 +14,7 @@ public class AgentView : MonoBehaviour
 
     private const float InjureFactor = 0.3f;
 
-    private const int TimeToChangeMaterial = 1;
+    private const int TimeToChangeMaterial = 2;
 
     [SerializeField] private Material _defaultMaterial;
     [SerializeField] private Material _damageMaterial;
@@ -53,6 +53,9 @@ public class AgentView : MonoBehaviour
         if (_currentHealth < _healthForInjure)
             SetInjureLayer();
 
+        if (_currentHealth <= 0)
+            Die();
+
         Jumping();
 
         if (_agent.CurrentVelocity.magnitude > 0.05f)
@@ -81,7 +84,7 @@ public class AgentView : MonoBehaviour
 
     private void Jumping() => _animator.SetBool(JumpKey, _agent.InProcessJump);
 
-    private void Die() => _animator.SetTrigger(DieKey);
+    private void Die() => _animator.SetBool(DieKey, true);
 
     private void SetInjureLayer() => _animator.SetLayerWeight(_animator.GetLayerIndex(InjureLayerKey), 1);
 
@@ -96,9 +99,6 @@ public class AgentView : MonoBehaviour
 
         SetAnyMaterial(_defaultMaterial);
 
-        if (_currentHealth <= 0)
-            Die();
-
         _damageProcess = null;
     }
 
@@ -109,16 +109,28 @@ public class AgentView : MonoBehaviour
                 skinnedMeshRenderer.material = material;
     }
 
-    private void SetFloatToMaterial(string key)
+    private void SetFloatToMaterial(string key, float currentTime, float endTime, out float progress)
     {
-        float progress = 0.3f + _currentTimeBeforeDissolve / _timeToDissolve;
-
-        if (progress >= 1f)
-            return;
+        progress = currentTime / endTime;
 
         foreach (SkinnedMeshRenderer skinnedMeshRenderer in _skinnedMeshRenderers)
             skinnedMeshRenderer.material.SetFloat(key, progress);
     }
 
-    
+    private IEnumerator DieProcess()
+    {
+        SetAnyMaterial(_dissolveMaterial);
+
+        while (true)
+        {
+            _currentTimeBeforeDissolve += Time.deltaTime;
+
+            SetFloatToMaterial(EdgeDissolveKey, _currentTimeBeforeDissolve, _timeToDissolve, out float progess);
+
+            if (progess >= 1f)
+                yield break;
+
+            yield return null;
+        }
+    }
 }
