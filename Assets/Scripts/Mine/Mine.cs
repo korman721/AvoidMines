@@ -8,13 +8,5 @@ public abstract class Mine : MonoBehaviour, IActivateble
 
     public abstract void Activate();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    public abstract void Initialize(IMovable movable, IDamageble damageble);
-=======
     public abstract void Initialize();
->>>>>>> parent of a62c33f (IntermediateCommit)
-=======
-    public abstract void Initialize();
->>>>>>> parent of a62c33f (IntermediateCommit)
 }
